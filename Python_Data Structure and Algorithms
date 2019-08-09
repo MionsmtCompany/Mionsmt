@@ -1,0 +1,1246 @@
+最新学习：
+为了跟上进度
+＃数据结构与算法
+＃兵法没有照样可以但是有了可以事半功倍的效果
+#a+b+c =1000 切a+b=c平方  abc 的组合
+#枚举法  一个一个数字去试
+#思路： 让a 从0开始 看b 从0开始 c 从0 开始 一个一个试数
+t1='''
+import  time
+start_time = time.time()
+for a in range (0,1001):        
+    for b in range(0,1001):
+        for c in range(0,1001):
+            if a+b+c==1000 and a**2+b**2==c**2:
+                print('a:{} b:{} c:{}'.format(a,b,c))
+end_time = time.time()
+s = end_time-start_time
+print('time:{}'.format(s))
+print('finished')
+'''
+#算法： 计算的方法 告诉计算的每一个步骤 让他做什么 确切步骤的描述  告诉计算机怎么做的 过程 思路 主要是思路 独立存在 语言无关
+#学习思想 语言只是描述 直观的体现性
+#算法的特性 *输入 具有输入或多个输入 *输出 *有穷性 ：有限的步骤 * 确切性 谁都能看懂，无歧义 * 可行性
+
+
+#代码改进：
+t2='''
+import time
+start_time = time.time()
+for a in range (0,1001):
+    for b in range(0,1001):
+        c = 1000-a-b
+        if a**2+b**2==c**2:
+            print('a:{} b:{} c:{}'.format(a,b,c))
+end_time = time.time()
+s = end_time-start_time
+print('time:{}'.format(s))
+print('finished')
+'''
+#T（n） = n * n * (1 + max(1,0)) = O(n^2)   大O表示法
+#速度快了很多 解决同一个问题可以用多种算法 衡量的问题
+#相对的快 离不开程序执行的环境不同
+#每台机器执行的总时间的不同 但是执行的基本运算数量大体相同
+#时间复杂度： 基本数量总和  在运算的基本步骤
+#T = 1000 * 1000 * 1000 * 2  时间复杂度 跟解决问题的规模有关  T(n) = n^3 * 2
+#g(n) = n^3    T(n) = k*g(n)   g是最简单的特征  g 是t 的一个渐进函数
+#g（n）就是时间复杂度的 大O 算法   n 代表的规模
+#最坏时间复杂度：处理的数据不同运算步骤就不同 判断算法的优劣的问题
+#最优 最理想 最坏就是 反之  最理想最特殊 最坏有保证 平均时间复杂度
+
+
+#几条基本原则:
+#常数项 基本操作为O(1)
+        # 顺序条件循环 所有的程序
+#顺序结构  加法进行计算
+#循环结构 乘法
+#分支结构 取时间复杂度最大值
+#判断效率的时候往往关注操作数量的最高次 其他常数项可以忽略
+# 没有特殊说明的情况下往往复杂度指的是最坏时间复杂度
+
+
+#常见的时间复杂度
+#函数里面都有函数体 函数体里面有代码 函数有优劣问题
+#timeit 计时器 来测试
+#class timeit.Timer(stmts = '',setup = '')
+#class timeit.Timer(number = 100000) #测算的少次
+
+
+t3='''
+# coding：utf-8
+import timeit
+from timeit import  Timer
+#创建列表的方式
+li1 = [1,2]
+li2 = [23,5]
+li11 = li1 + li2
+li12 = [i for i in range(10000)]
+li13 = list(range(1000))
+def test1():
+    li = []
+    for i in range(10000):
+        li.append(i)
+def test2():
+    li = []
+    for i in range(10000):
+        li += [i]
+def test3():
+    li= [i for i in range(10000)]
+
+def test4():
+    li = list(range(10000))
+def test5():
+    li = []
+    for i in range(10000):
+        li.extend([i])
+
+timer1 = Timer('test1()','from __main__ import test1')
+print('append:',timer1.timeit(1000))
+
+timer2 = Timer('test2()','from __main__ import test2')
+print('+:',timer2.timeit(1000))
+
+timer3 = Timer('test3()','from __main__ import test3')
+print('[i for i in range]:',timer3.timeit(1000))
+
+timer4 = Timer('test4()','from __main__ import test4')
+print('list(range()):',timer4.timeit(1000))
+timer5 = Timer('test5()','from __main__ import test5')
+print('extend:',timer5.timeit(1000))
+#看运行的时间 少用加号
+
+def test6():
+    li = []
+    for i in range(10000):
+        li.append(i)
+
+def test7():
+    li = []
+    for i in range(10000):
+        li.insert(0,i)
+
+timer6 = Timer('test6()','from __main__ import test6')
+print('append:',timer6.timeit(1000))
+timer7 = Timer('test7()','from __main__ import test7')
+print('insert:',timer7.timeit(1000))
+'''
+#数据类型的效率不同
+
+
+#算法是思想 是解决问题的思路不算处理的是什么数据
+#数据结构 怎样把数据解决起来
+
+#存储方式 列表方式 字典方式 字典列表综合
+#[{}] O1  [()] n  {{}}  数据保存类型不一样 算法就不一样
+#数据时抽象概念 类型对应存储单元 int float char  把基础元素组织到一起
+#基本数据类型的封装
+#程序 = 数据结构+算法
+#算法是为了解决实际问题涉及到，数据结构是算法需要处理问题的一个载体
+
+#抽象数据类型：  本身和所支持的操作放到一起就是 ADT
+
+
+
+#顺序表
+#内存是一个存储空间  按顺序去存放 对应到内存的形式  顺序表的布局 相同类型的数据按顺序存储到一起
+#下标就是偏移量的意思 从0 开始算
+#元素外置 地址占用大小是相同的 通过地址来指向数据 把四个地址存起来 元素在这个列表外
+#存储空间里面存储地址 地址里面有个地址 里面的地址的内容是外置的情况
+
+#表头信息+数据区
+#表头信息是详情信息 内容[]元素个数[]0[]1[]2[]....  先去申请 把内容预估出来
+#表头信息和数据放到一起  *直接跳过表头 *分离式结构 表头和数据没有联系起来
+#顺序表添加数据必须重新申请
+#存储器的扩充 采用预留策略， *固定数目 or +10 特点 节省空间  *翻倍 加倍 特点：空间换时间
+
+
+
+#链表  在扩充的时候多一个就增加一个 不用重新申请
+#在地址上没有连续的概念了 用一根线把数据拿先串起来 通过前一个数据找到后一个数据
+#节点和节点之间用线连起来
+#线性表  * 顺序表  *链表
+#链的实现：
+#节点不仅仅保留同一个数据 连个整体作为一个节点 第一个保存数据第二个保存地址同时变成两部分
+# 数据区 链接区（下一个节点的位置）下一个的数据区链接 链接上一个的链接区
+
+
+#单向链表 知道一个节点的位置才能够顺着找到后面所有的节点
+# P 为头节点   尾节点为空 1/2
+#单链表实现的操作 是否为空 链表程度 遍历整个列表 头添加 尾添加 指定添加 删除节点 查找是否存在
+#Python中交换两个变量
+x = 10
+y = 20
+x,y = y,x
+# x是一块内存 x 的空间指向10  但是x的内存里面存储的是a的地址
+#下面的x指向y的存储地址 空间的变化 改变看xy维护的东西 只是名字而已 只是保存内容的地址
+#一切皆对象 把函数保存起来 x具体是一个名字 保存的是一个地址 可以随意表达对象
+#但是如果前面进行了类型的限制的话 就只能存储对应类型的值   #（其他语言）
+
+#单向链表的实现
+#先不按照Python语言的特殊性
+
+
+
+
+
+# class Node(object):
+#     '''节点'''
+#     def __init__(self,elem):
+#         self.elem = elem
+#         self.next = None
+#
+# # node = Node(100)
+# class SingleLinkList(object):
+#     '''单列表'''
+#     def __init__(self,node=None):
+#         self.__head = node
+#     def is_empty(self):
+#         '''链表是否为空'''
+#         return  self.__head == None
+#     def length(self):
+#         '''链表长度'''
+#         #游标 指针 指到的位置cur  用来遍历节点
+#         #count 记录数量
+#         cur = self.__head
+#         count = 0
+#         while cur != None:
+#             count += 1
+#             cur = cur.next
+#         return count
+#     def travel(self):
+#         '''遍历整个列表'''
+#         cur = self.__head
+#         while cur != None:
+#             print(cur.elem,end=" ")
+#             cur = cur.next
+#         print('')
+#
+#     def add(self,item):
+#         '''链表头部添加元素，头插法  O（1）'''
+#         node = Node(item)
+#         node.next = self.__head
+#         self.__head = node
+#     def append(self,item):
+#         '''链表尾部添加元素,尾插法O()'''
+#         node = Node(item)
+#         if self.is_empty():
+#             self.__head = node
+#         else:
+#             cur = self.__head
+#             while cur.next != None:
+#                 cur = cur.next
+#             cur.next = node
+#     def insert(self,pos,item):
+#         '''指定位置添加元素
+#         :param pos 从0开始***
+#         '''
+#         if pos < 0:
+#             self.add(item)
+#         elif pos > (self.length()-1):
+#             self.append(item)
+#         pre = self.__head
+#         count = 0
+#         while count < (pos-1):
+#             count += 1
+#             pre = pre.next
+#         #当循环退出后 pre 指向pos节点
+#         node = Node(item)
+#         node.next = pre.next
+#         pre.next = node
+#     def remove(self,item):
+#         '''删除节点'''
+#         cur = self.__head
+#         pre = None
+#         while cur != None:
+#             if cur.elem == item:
+#                 #先判断此节点是否是头节点
+#                 # 如果是头节点：
+#                 if cur == self.__head:
+#                     self.__head = cur.next
+#                 else:
+#                     pre.next = cur.next
+#                 break #****
+#             else:
+#                 pre = cur
+#                 cur = cur.next
+#
+#     def search(self,item):
+#         '''查找节点是否存在'''
+#         cur = self.__head
+#         while cur !=None:
+#             if cur.elem == item:
+#                 return True
+#             else:
+#                 cur = cur.next
+#         return False
+# # node = Node(100)
+# # single_obj = SingleLinkList() #创建对象
+# # single_obj.travel()#构造函数
+#
+# if __name__ == "__main__":
+#     ll = SingleLinkList()
+#     print(ll.is_empty())
+#     print(ll.length())
+#
+#     ll.append(1)
+#     print(ll.is_empty())
+#     print(ll.length())
+#     ll.add(8)
+#     ll.append(2)
+#     ll.insert(-158,9)
+#     ll.travel()
+#     ll.insert(2,100)
+#     ll.travel()
+#     ll.remove(100)
+#     ll.travel()
+
+
+
+
+#后继节点  一个节点后面的节点就是
+#顺序表存储数据的时候可以直接定位 对于顺序表 必须是连续的
+#链表 内存开销大 查询慢
+
+#单向循环链表
+#与链表的区别就是 Node指向头结点了
+
+
+
+
+
+
+
+
+
+
+#双向链表
+#*后继节点   *前驱节点  一个节点里面有三个点 P 和N 相互连接
+
+
+
+
+
+
+
+
+#
+# class Node(object):
+#     '''节点'''
+#     def __init__(self,item):
+#         self.elem = item
+#         self.next = None
+#         self.prev = None
+#
+# class DoubleLinkList(object):
+#     def __init__(self,node=None):
+#         self.__head = node
+#
+#     def is_empty(self):
+#         '''链表是否为空'''
+#         return  self.__head is None
+#
+#     def length(self):
+#         '''链表长度'''
+#         #游标 指针 指到的位置cur  用来遍历节点
+#         #count 记录数量
+#         cur = self.__head
+#         count = 0
+#         while cur != None:
+#             count += 1
+#             cur = cur.next
+#         return count
+#
+#
+#     def travel(self):
+#         '''遍历整个列表'''
+#         cur = self.__head
+#         while cur != None:
+#             print(cur.elem,end=" ")
+#             cur = cur.next
+#         print('')
+#
+#     def add(self,item):
+#         '''链表头部添加元素，头插法  O（1）'''
+#         node = Node(item)
+#         node.next = self.__head
+#         self.__head = node
+#         node.next.prev = node
+#
+#
+#     def append(self,item):
+#         '''链表尾部添加元素,尾插法O()'''
+#         node = Node(item)
+#         if self.is_empty():
+#             self.__head = node
+#         else:
+#             cur = self.__head
+#             while cur.next != None:
+#                 cur = cur.next
+#             cur.next = node
+#             node.prev = cur
+#
+#
+#
+#     def insert(self,pos,item):
+#         '''指定位置添加元素
+#         :param pos 从0开始***
+#         '''
+#         if pos <= 0:
+#             self.add(item)
+#         elif pos > (self.length()-1):
+#             self.append(item)
+#         else:
+#             cur = self.__head
+#             count = 0
+#             while count < pos:
+#                 count += 1
+#                 cur = cur.next
+#             #当循环退出后 pre 指向pos节点
+#             node = Node(item)
+#             node.next = cur
+#             node.prev = cur.prev
+#             cur.prev.next = node
+#             cur.prev = node
+#
+#
+#     def remove(self,item):
+#         '''删除节点'''
+#         cur = self.__head
+#         while cur != None:
+#             if cur.elem == item:
+#                 #先判断此节点是否是头节点
+#                 # 如果是头节点：
+#                 if cur == self.__head:
+#                     self.__head = cur.next
+#                     cur.next.prev = None
+#                     if cur.next:
+#                         #判断链表是否只有一个节点
+#                         cur.next.prev = None
+#                 else:
+#                     cur.prev.next = cur.next
+#                     if cur.next:
+#                         cur.next.prev = cur.prev
+#                 break #****
+#             else:
+#                 cur = cur.next
+#
+#     def search(self,item):
+#         '''查找节点是否存在'''
+#         cur = self.__head
+#         while cur !=None:
+#             if cur.elem == item:
+#                 return True
+#             else:
+#                 cur = cur.next
+#         return False
+#
+#
+
+
+# node = Node(100)
+# single_obj = SingleLinkList() #创建对象
+# single_obj.travel()#构造函数
+
+
+
+
+
+
+# if __name__ == "__main__":
+#     ll = DoubleLinkList()
+#
+#     print(ll.is_empty())
+#     print(ll.length())
+#
+#     ll.append(1)
+#     print(ll.is_empty())
+#     print(ll.length())
+#     ll.add(8)
+#     ll.append(2)
+#     ll.insert(-158,9)
+#     ll.travel()
+#     ll.insert(2,100)
+#     ll.travel()
+#     ll.remove(100)
+#     ll.travel()
+
+
+
+#链表和顺序表 线性表 线性数据
+#栈利用线性表中任意实现  容器 保存线性数据
+#后进先出 LIFO （特点）
+#栈的应用情况： 用栈的方式去解析数学括号的运算
+#队列 一端添加 另一端取 先进先出
+
+
+
+
+#
+# class  Stack(object):
+#     '''栈'''
+#     def __init__(self):
+#         self.__list = []
+#         #容器
+#
+#     def push(self,item):
+#         '''添加一个新的元素item到栈顶'''
+#         self.__list.append(item)
+#
+#     def pop(self):
+#         '''弹出栈顶元素'''
+#         return self.__list.pop()
+#
+#     def peek(self):
+#         '''返回栈顶元素'''
+#         if self.__list:
+#             return self.__list[-1]
+#         else:
+#             return None
+#     #返回最后一个元素
+#
+#     def is_empty(self):
+#         '''判断是否为空'''
+#         return self.__list == []
+#         # return not self.__list
+#         #"" []{}() 0 都是假的
+#
+#     def size(self):
+#         '''返回栈的元素个数'''
+#
+# if __name__ == "__main__":
+#     s = Stack()
+#     s.push(1)
+#     s.push(2)
+#     s.push(3)
+#     s.push(4)
+#     print(s.pop())
+#     print(s.pop())
+#     print(s.pop())
+#     print(s.pop())
+
+
+
+
+
+# #队列
+# class Queue(object):
+#     '''队列'''
+#     def __init__(self):
+#         self.__list = []
+#
+#
+#     def enqueue(self,item):
+#         '''往列队中添加一个item元素'''
+#         self.__list.append(item)
+#
+#
+#     def dequeue(self):
+#         '''从队列头部删除一个元素'''
+#         return  self.__list.pop(0)
+#
+#
+#
+#     def is_empty(self):
+#         '''判断一个列表是否为空'''
+#         return  self.__list == []
+#
+#
+#     def size(self):
+#         '''返回队列的大小'''
+#         return len(self.__list)
+#
+# if __name__ == "__main__":
+#     s = Queue()
+#     s.enqueue(1)
+#     s.enqueue(2)
+#     s.enqueue(3)
+#     s.enqueue(4)
+#     print(s.dequeue())
+#     print(s.dequeue())
+#     print(s.dequeue())
+#     print(s.dequeue())
+
+
+
+#双端队列
+
+
+
+
+
+
+
+#算法内容： 无序的转为有序的
+#排序算法的稳定性
+
+#冒泡排序：
+def bubble_sort(alist):
+    '''冒泡排序'''
+    n = len(alist)
+    for j in range(0,n-1):
+        for i in range(0,n-1-j):
+            #从头走到尾
+            if alist[i] > alist[i+1]:
+                alist[i],alist[i+1] = alist[i+1],alist[i]
+#O（n^2）
+'''
+if __name__ == "__main__":
+    li = [1,5,88,6,3]
+    print(li)
+    bubble_sort(li)
+    print(li)
+'''
+#冒泡排序最优状况：
+
+def bubble_sort_bast(alist):
+    '''冒泡排序'''
+    n = len(alist)
+    for j in range(0,n-1):
+        count = 0
+        for i in range(0,n-1-j):
+            #从头走到尾
+            if alist[i] > alist[i+1]:
+                alist[i],alist[i+1] = alist[i+1],alist[i]
+                count += 1
+        if 0 == count:
+            return
+#复杂度：O(n)
+
+
+
+
+#选择排序
+#小的就放在前面 一次一次排序  位置交换
+#认为序列的最左部分是有序的 右边是没顺序的 把最小值放在最左边
+alist = [87,95,25,2,45,36,17,287,65]
+
+def select_sort(alist):
+    '''选择排序'''
+    n = len(alist)
+    for j in range(n-1):  #j表示的是0到n-2
+        min_index = j
+        for i in range(j+1,n):
+            if alist[min_index] > alist[i]:
+                min_index = i
+        alist[j] ,alist[min_index] = alist[min_index], alist[j]
+
+'''
+if __name__ == "__main__":
+    alist = [87, 95, 25, 2, 45, 36, 17, 287, 65]
+    print(alist)
+    select_sort(alist)
+    print(alist)
+'''
+#时间复杂度
+#稳定性：同样里面有1 后面的1到前面了
+
+
+
+#插入算法
+alist_2 = [87, 95, 25, 2, 45, 36, 17, 287, 65]
+#前面的是有序序列 后面的是无序序列 把后面的插入到前面 就是插入算法
+#第一个就是有序序列 后面的数一个一个往前去比较 只和前面的去比较
+#每次拿出右边序列的无序情况的第一个元素 和前面的比  最大就放在最后面
+#就是右边取出第一个 看放到左边的第几个位置上
+def insert_sort(alist):
+    '''插入排序'''
+    n = len(alist)
+    #从右边的无序序列中取出多少个元素执行这样的过程
+    for j in range(1,n):
+        #j = [1,2,3,n-1]
+        #i代表内层循环的起始值
+        i = j
+        #执行从右边的无序序列中取出第一个元素 即i位置的元素 然后将其插入前面正确的位置当中
+        while i > 0:
+            if alist[i] < alist[i-1]:
+                alist[i],alist[i-1] = alist[i-1],alist[i]
+                i -= 1
+            else:
+                break
+#O(n)
+#稳定性：插入排序是稳定的
+'''
+if __name__ == "__main__":
+    alist = [87, 95, 25, 2, 45, 36, 17, 287, 65,2333]
+    print(alist)
+    insert_sort(alist)
+    print(alist)
+'''
+
+#希尔排序  插入排序的改进发
+#其中有一个间隔 自己定义的一个间隔 然后隔着间隔来进行判断排序
+#第一次排序只是几个几个的进行比较
+#然后在进行一次此类的排序 但是把缝隙调小了
+def shell_sort(alist):
+    '''希尔排序'''
+    n = len(alist)
+    gap = n // 2
+    #gap 变化到0之前插入算法执行次数
+    while gap > 0:
+            #插入算法与普通算法的区别就是gap长度
+        for j in range(gap,n):
+            i = j
+            while i > 0:
+                if alist[i] < alist[i-gap]:
+                    alist[i], alist[i-gap] = alist[i-gap], alist[i]
+                    i -= gap
+                else:
+                    break
+            #缩短gap步长
+        gap //= 2
+
+#稳定性  就是其中的特殊情况  不稳定
+'''
+if __name__ == "__main__":
+    alist = [87, 95, 25, 2, 45, 36, 17, 287, 65,2333]
+    print(alist)
+    shell_sort(alist)
+    print(alist)
+'''
+
+#快速排序找到数字的位置
+#比要找到的数字小 和 比 要找到的数字大 两个交汇处就是所要选择的数字
+#这个数字左边的都小  右边都大 一直和自己定义的中间值进行比较
+# 必须要掌握的！！！！！！*****
+def quick_sort(alist,first,last):
+    '''快速排序'''
+    #递归实现
+    if first >= last:
+        return #不用操作的意思
+    mid_value = alist[first]
+    low = first
+    high = last
+
+    while low < high:
+        #high左移
+        while low < high and alist[high] >= mid_value:
+                high -= 1
+            #从左往左一直走 high左移
+        alist[low] = alist[high]
+        # low += 1#移动一个位置
+
+        while low < high and alist[low] < mid_value:
+            low += 1
+        alist[high] = alist[low]
+        #从循环退出是 low = high
+    alist[low] = mid_value
+    #对 low 左边的列表执行快速排序
+    quick_sort(alist,first,low-1)
+    # 右边进行排序
+
+    quick_sort(alist,low+1,last)
+    #就是找到了中间值以后 将左右两边在继续快速排序
+#时间复杂度log2n  不稳定
+'''
+if __name__ == "__main__":
+    alist = [87, 95, 25, 2, 45, 36, 17, 287, 65, 233]
+    print(alist)
+    quick_sort(alist,0,len(alist)-1)
+    print(alist)
+'''
+
+
+#归并排序
+#一半一半的分开数据  分开以后再进行合并 小的在前大的在后面
+#合并成了两个的时候先比较第一个也就是小的元素 再 比较后面的 连接起来
+#比较小的提取出来放到最前面
+#一直拆到只有一个元素的时候 这就叫做归并
+
+def merge_sort(alist):
+    '''归并排序'''
+    n = len(alist)
+    if n<= 1:
+        return alist
+    mid = n // 2
+    #left 采用归并排序后形成有序的新的列表
+    left_li= merge_sort(alist[:mid])
+    # right 采用归并排序后形成有序的新的列表
+    right_li = merge_sort(alist[mid:])
+    #将两个有序的子序列合并到一起，为一个整体
+    # merge_sort()
+    left_pointer,right_pointer = 0,0
+    result = []
+    while left_pointer < len(left_li) and right_pointer < len(right_li):
+        if left_li[left_pointer] <= right_li[right_pointer]:
+            result.append(left_li[left_pointer])
+            left_pointer += 1
+        else:
+            result.append(right_li[right_pointer])
+            right_pointer +=1
+    result += left_li[left_pointer:]
+    result += right_li[right_pointer:]
+    return  result
+'''
+if __name__ == "__main__":
+    alist = [87, 95, 25, 2, 45, 36, 17, 287, 65, 233]
+    print(alist)
+    a = merge_sort(alist)
+    print(a)
+    #时间复杂度 O(nlogn)
+    #添加了一个等号 稳定
+'''
+
+#搜索 在一个序列中查找元素是否存在
+#翻字典的特征 翻中间
+#二分查找：操作对象是排序之后的 元素是相邻的 只能支持下标索引 作用于有序的顺序表里
+def binary_search(alist,item):
+    '''二分查找'''
+    #递归版本
+    if len(alist) == 0:
+        return False
+    else:
+        n = len(alist)
+        mid = n//2
+        if alist[mid] == item:
+            return True
+        elif item < alist[mid]:
+            return binary_search(alist[:mid],item)
+        else:
+            return binary_search(alist[mid+1:],item)
+
+'''
+if __name__ == '__main__':
+    alist = [2,8,7,9]
+    print(binary_search(alist,8))
+    print(binary_search(alist,25))
+'''
+
+
+    #非递归的版本二分查找
+def binary_search_2(alist,item):
+    '''非递归，二分查找'''
+    n = len(alist)
+    first = 0
+    last = n-1
+    while first <= last:
+        mid = (first + last)//2
+        if alist[mid] == item:
+            return True
+        elif item < alist[mid]:
+            last = mid - 1
+        else:
+            first = mid + 1
+    return False
+'''
+if __name__ == '__main__':
+    alistss = [87, 95, 25, 2, 45, 36, 17, 287, 65, 233]
+    print(binary_search_2(alistss,120))
+
+'''
+#折半查找
+#复杂度：最优O(1)  最坏O（logn）
+
+
+
+
+
+#树
+#每个节点都有多个子节点
+#没有父节点的称为根节点
+#每一个非根节点有且只有一个父节点
+#除了根节点之外，每个子节点可以分为多个不想交的子树
+
+#树的术语
+#节点的度： 子节点个数 （子树的个数） 就是最长下面一串有几个
+#树的度： 最长的那个
+#叶节点：最后一个
+#父节点 子节点 兄弟节点
+#节点层次 每一行
+#树的深度： 最大层数
+#堂兄弟节点 同一个爷爷
+#节点的祖先  这一条线上面的都是下面的祖先
+#子孙 下面所有的点
+#森林 集合
+
+
+
+#无序数
+#有序数 对你来说 有特定的意义
+    # 二叉树 一个节点的节点只能有两个
+        #完全二叉树除了最低层就是有祖先的那一层 上面的全都是两个节点
+        #满二叉树 不会有任何一个缺少的
+        #平衡二叉树 两个叉之间深度不能超过1 子节点的高度
+        #排序二叉树 ： 数中的节点遍历的时候是有序的 根左边的优比根小 右边的都比根大
+            #拥有一种特定的顺序
+    #霍夫曼树
+    #B树
+
+
+#树的存储和表示
+#从上到下 从左到右的方法存储
+
+
+
+#树的应用场景：
+#HTML 当中应用 子节点等的情况
+#路由协议
+#数据库索引
+#文件系统的目录结构
+#经典的AI算的 机器学习都是以树的结构
+
+
+#二叉树：
+#特性 5条数学性质
+#编号的规则：从上到下 从左到右的方法存储
+
+
+#代码对树的实现：
+class Node(object):
+    '''节点'''
+    def __init__(self,item):
+        self.elem = item
+        self.lchild = None
+        self.rchild = None
+
+class Tree(object):
+    '''二叉树'''
+    def __init__(self):#链表的扩充
+        self.root = None#根节点
+
+    # 向着完全二叉树的方向努力 一层一层的去找
+    # 广度优先 横向 一层一层的去遍历
+    #队列的方式
+    def add(self,item):
+        node = Node(item)
+        if self.root is None:
+            self.root = node
+            return
+        queue = [self.root]
+        while queue:#如果队列不为空
+            cur_node = queue.pop(0)
+            if cur_node.lchild is None:
+                cur_node.lchild = node
+                return
+            else:
+                queue.append(cur_node.lchild)
+            if cur_node.rchild is None:
+                cur_node.rchild = node
+                return
+            else:
+                queue.append(cur_node.rchild)
+#树的插入过程已经完成
+#树的遍历：
+
+
+    def breadth_travel(self):
+        '''广度遍历'''
+        if self.root is None:
+            return
+        queue = [self.root]
+        while queue:
+            cur_node = queue.pop(0)
+            print(cur_node.elem,end = "")
+            if cur_node.lchild is not None:
+                queue.append(cur_node.lchild)
+            if cur_node.rchild is not None:
+                queue.append((cur_node.rchild))
+
+    # 深度遍历：
+    # 先序：先是根 中序：中间是根 后序 ：最后是根 都是左右的顺序
+    def preorder(self,node):
+        '''先序遍历'''
+        if node is None:
+            return
+        print(node.elem,end = "")
+        self.preorder(node.lchild)
+        self.preorder(node.rchild)
+
+    def inorder(self,node):
+        '''中序遍历'''
+        if node is None:
+            return
+
+        self.inorder(node.lchild)
+        print(node.elem, end="")
+        self.inorder(node.rchild)
+
+    def postorder(self,node):
+        '''中序遍历'''
+        if node is None:
+            return
+
+        self.postorder(node.lchild)
+        self.postorder(node.rchild)
+        print(node.elem, end="")
+
+if __name__ == '__main__':
+    tree = Tree()
+    tree.add(0)
+    tree.add(1)
+    tree.add(2)
+    tree.add(3)
+    tree.add(4)
+    tree.add(5)
+    tree.add(6)
+    tree.add(7)
+    tree.add(8)
+    tree.add(9)
+    tree.breadth_travel()
+    print('')
+    tree.preorder(tree.root)
+    print('')
+    tree.inorder(tree.root)
+    print('')
+    tree.postorder(tree.root)
+    print('')
+
+
+#给出序列画出树的图
+#给出先序和中序画出后序
+#中的0就是分界点 在分1  中 先0  最大 其他 分成序列
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
