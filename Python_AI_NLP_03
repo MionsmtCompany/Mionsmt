@@ -1,0 +1,340 @@
+#大部分时间花在程序预处理上
+#程序需要自己整理
+#没有银弹（文章）：指的是  氢弹，银弹  根本不存在这样的东西
+#计算机行业195 、6 几年  没几天就有新的概念出来  都以为出现了一个可以解决所有事情的东西
+#   结果忘记了最本质的东西  文章并不是划时代 或者是突破性的研究 不是忽然一下子
+#   前人进步了一点点 才有所谓的突破 以前我们能解决85 -> 88
+#   你直接学了 90 最新的 解决所有的问题 不要上来就学听都没听过的东西
+#dfs bfs 的运用的例子  不知道它有什么用 知道它 但是不实用
+#拼接起来的一些东西 计算机领域中 在前人的基础上前进一步
+ #根据数据生成一个函数完成我们的期欲
+from sklearn.datasets import load_boston
+data = load_boston()
+# print(data)
+X,Y = data['data'],data['target']
+# print(X[:,0])
+# print(Y[0])
+# print(data['feature_names'])
+# print(data['DESCR'])
+# plt.scatter(X[:,5],Y)
+# plt.show()
+#根据数据自动生成f（x）
+def draw_rw_and_price():
+    plt.scatter(X[:,5],Y)
+# plt.show()
+import matplotlib.pyplot as plt
+
+fig = plt.figure()#和下面是配套的
+
+import random
+def price(rm,k,b):
+    'f(x) = kx + b'
+    return k * rm + b
+
+X_rm = X[:,5]
+k = random.randint(-100,100)
+b = random.randint(-100,100)
+# k = 11
+# b = -49
+price_by_random_k_and_b = [price(r,k,b) for r in X_rm]
+plt.scatter(X_rm,price_by_random_k_and_b)
+draw_rw_and_price()
+plt.scatter(X[:,5],Y)
+fig.tight_layout()
+plt.show()#图重合上了代表更好  中间的距离就是损失值
+
+
+
+
+def loss(y,y_hat):#损失值
+    return  sum((y_i-y_hat_i)**2 for y_i,y_hat_i in zip(list(y),list(y_hat)))/len(list(y))
+# print(loss([1,1,1],[2,2,2]))
+
+def partial_k(x,y,y_hat):
+    n = len(y)
+    gradient = 0
+    for x_i,y_i,y_hat_i in zip(list(x),list(y),list(y_hat)):
+        gradient += (y_i - y_hat_i) * x_i
+    # return -2 / n * sum(y_i - y_hat_i) * x_i for x_i,y_i,y_hat_i in zip(list(x),list(y),list(y_hat))
+    return -2/n*gradient
+# import  random
+def partial_b(x,y,y_hat):
+    n = len(y)
+    gradient = 0
+    for y_i, y_hat_i in zip( list(y), list(y_hat)):
+        gradient += (y_i - y_hat_i)
+    return -2 / n * gradient
+
+
+
+
+
+'''
+X_rm = X[:,5]
+# print(random.random()*20000-10000)#初始的就是0-1之间的数值
+trying_times = 10000
+min_loss = float('inf')
+best_k,best_b = None,None
+for i in range(trying_times):
+    k = random.random()*200 - 100
+    b = random.random()*200 - 100
+    price_by_random_k_and_b = [price(r,k,b) for r in X_rm]
+    current_loss = loss(Y,price_by_random_k_and_b)
+    if current_loss < min_loss:
+        min_loss = current_loss
+        best_k,best_b = k,b
+        # print('time{},k:{},b:{},loss::{}'.format(i,best_k,best_b,min_loss))
+# plt.scatter(X_rm,price_by_random_k_and_b)
+'''
+#--------------------梯度下降
+
+
+
+trying_times = 2000
+
+# best_k,best_b = None,None
+min_loss = float('inf')
+X,Y = data['data'],data['target']
+current_k = random.random() * 200 - 100
+current_b = random.random() * 200 - 100
+
+# learning_rate = 1e-04
+k_gradient = partial_k(X_rm, Y, price_by_random_k_and_b)
+b_gradient = partial_b(X_rm, Y, price_by_random_k_and_b)
+current_k = current_k + (-1 * k_gradient)
+current_b = current_b + (-1 * b_gradient)
+for i in range(trying_times):
+    price_by_k_and_b = [price(r,current_k,current_b) for r in X_rm]
+    current_loss = loss(Y,price_by_k_and_b)
+    if current_loss < min_loss:#如果他没有变的更好
+        min_loss = current_loss
+        # if  i % 50==0:
+            # print('time{},k:{},b:{},loss::{}'.format(i,current_k,current_b,min_loss))
+
+    # current_k = current_k + (-1 * k_gradient)
+    # current_b = current_b + (-1 * b_gradient)
+
+
+#学习速率
+#加上导数的反方向
+
+
+
+#如果我们想得到更具爱的更新 在更短的时间内获得更好的结果，我们需要一件事情
+# 找对改变的方向
+#如何找到改变对象的方向    ：
+# 有一个东西监督这他 让他更好的继续走  这个东西就像是一个学习过程 这就是叫监督学习
+
+
+
+#-----------导数
+#一维空间叫导数
+#多维叫做梯度
+#第三节课补第二节课没补完的
+#a--b 点怎么走 这是一个决策过程  基于搜索
+#神经网络SVM ->bp算法 相当于会打字
+#偏导
+
+
+#物理学的进化中真正的原理都是简单且容易理解的
+
+
+
+
+
+#paradigm   范式  现代语叫做套路
+#计算机科学不是科学 它是一个工程化的问题 最少的时间最少的程序解决问题
+#
+
+
+#每次扩展重要的点 围棋  ebm  围棋的搜索空间大 n的361次方
+#都是搜索问题  扩展 排序 选取排序第一的点 排序算法
+#A* 最优点  没一点搜索的时候不考虑这两个点有多好  这个点到另一个点估计有多远
+#搜索问题  不管是一个图还是一个树 在扩展的过程中 画出来也都是一个树
+#---------动态规划：
+#搜索的点太多  算法    很多人工智能都是搜索的问题  把 表格拆分出来
+#穷举 就是钢筋的问题
+'''
+original_price = [1,5,8,9,10,17,17,20,24,30]
+price = {}
+for i ,p in enumerate(original_price):
+    price[i + 1] = p
+print(price[10])
+from collections import  defaultdict
+
+some_defalut_dict = defaultdict(lambda :None)
+some_defalut_dict[1] = 0
+'''
+original_price = [1,5,8,9,10,17,17,20,24,30,39]
+
+from collections import  defaultdict
+price = defaultdict(int) #因为这里设置了int 所以...
+for i ,p in enumerate(original_price):
+    price[i + 1] = p
+# print(price[11])
+#论与没见过的函数置气
+
+#面向函数的语言 面向的意思 ：就是在语言里面 面向的东西 定义为变量 作为函数的输入输出 3种
+#面向对象 所有的函数都可以当成参数值
+def example (f,arg):
+    return f(arg)
+def add_ten(num):
+    return num+10
+def mul_ten(num):
+    return num*100
+operations = [add_ten,mul_ten]
+
+for f in operations:
+    pass
+    # print(example(f,100))#可调用的范围多了一些
+
+'''
+called_time = defaultdict(int)
+def get_call_times(f):
+    result = f()
+    print('function{}'.format(f.__name__))
+    called_time[f.__name__] += 1
+    return result
+'''
+def some_function_1():print('Mionsmt')
+
+
+# print(get_call_times(some_function_1))
+#get the axm splitting by enumerate
+call_time_with_arg = defaultdict(int)
+'''
+call_time_with_arg = defaultdict(int)
+def r(n):#在r里这个点要考虑第一附属
+    # fname = r.__name__
+    # call_time_with_arg[(fname,n)] += 1
+    return  max(
+        [price[n]] + [r(i)+ r(n-i) for i in range(1,n)]
+    ) #生成了一个列表
+#都是等式
+'''
+from collections import  Counter
+# print(Counter(call_time_with_arg).most_common())
+# print(call_time_with_arg)
+
+
+
+# for i in range(1,5):
+#     print(i)
+from functools import wraps
+
+
+
+def get_call_time(f):
+    '''接受一个输入'''
+    @wraps(f)
+    def wrap(n):
+        ''' wrap'''
+        result = f(n)
+        call_time_with_arg[(f.__name__,n)] += 1
+        return result
+    return wrap
+def add_tens(n): return n + 10
+add_ten_with_call_time = get_call_time(add_tens)
+# print(add_ten_with_call_time(10))
+#装饰器：
+#相当于赋值一个新的函数 我们运行新的函数可以保留原来的函数，还能在新的函数内加入新的功能
+@get_call_time #执行了函数名字为他的一个函数 但是这个函数里面有一个函数为参数 就是下面那个
+#上面这个就等于 add_tens = 上面名字（下面函数） add_tens = get_call_time(add_tens)
+def add_tens(n):
+    return n + 10
+
+#用装饰器实现上面的r
+
+def memo(f):
+    already_computed = {}
+    @wraps(f)
+    def _wrap(arg):
+        result = None
+
+
+        if arg in already_computed:
+            result = already_computed[arg]
+        else:
+            result = f(arg)
+            already_computed[arg] = result
+        return result
+    return _wrap
+'''
+@get_call_time
+@memo
+def r(n):#在r里这个点要考虑第一附属
+    '''''' shenmegui''''''
+    return  max(
+        [price[n]] + [r(i)+ r(n-i) for i in range(1,n)]
+    ) #生成了一个列表
+# print(r(10))
+# print(call_time_with_arg)
+#在下面紧密连接
+# print(help(r))
+print(r(225))
+# print(call_time_with_arg)
+#1940年提出的方法 查表的意思  动态规划 不断查表的方法
+
+'''
+import sys
+sys.setrecursionlimit(10000000) #规定深度
+solution = {}
+@memo
+def r(n):
+    max_price,max_split = max(
+        [(price[n],0)] + [(r(i)+r(n-i),i) for i in range(1,n)],key = lambda  x:x[0]
+    )
+
+    solution[n] = (n - max_split,max_price)
+
+    return max_price
+def parse_solution(n):
+    left_split,right_split = solution[n]
+
+    if right_split == 0: return  [left_split]
+
+    return  parse_solution(left_split)+ parse_solution(right_split)
+print(r(15))
+print(solution[15])
+print(parse_solution(15))
+#就是分数 一级一级往下分
+
+
+
+# print(parse_solution(234))
+# print(solution)
+# print(solution)
+#都得需要连这
+# print(solution)
+
+
+#动态规划的特点
+# 都有一个重复的子问题
+# 用一个表把它存起来
+# 把存储分析的结果解析一下
+
+#--------编辑距离
+#两个单词的相似度怎么判断
+# 插入
+# 删除
+# 替换
+#根据编辑距离来识别 拼写找到相似的字 衡量机器翻译和语音识别
+#285行的代码
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
