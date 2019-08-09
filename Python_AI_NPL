@@ -1,0 +1,385 @@
+#coding=utf-8
+simple_grammar = """ 
+sentence => noun_phrase verb_phrase
+noun_phrase => Article  Adj*  noun
+Adj* => null | Adj  Adj*
+verb_phrase => verb  noun_phrase
+Article => 一个 | 这个
+noun => 女人 | 篮球 | 桌子 | 小猫
+verb => 看着 | 坐着 | 听着| 看见
+Adj => 蓝色的 | 好看的 | 小小的
+"""
+simplest_grammar = '''
+number = number number | single_number
+single_number = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 '''
+import random
+def adj(): return random.choice('蓝色的 | 好看的 | 小小的'.split('|')).split()[0]
+print(adj())
+def adj_star():
+    return random.choice([None,adj() + adj()+adj()+adj()+adj()])
+print(adj_star())
+# def asdasd():   定义很多这样的函数  如果换语法了 就是上面文件定义的语法就不行了
+adj_grammar = '''
+Adj* => null | Adj Adj*
+Adj => 蓝色的 | 好看的 | 小小的
+'''
+#变量 左边可以继续扩展
+#不能扩展的东西就是后面的内容
+#{可扩展，可扩展的东西}
+grammar = { }
+for line in adj_grammar.split('\n'):
+    if not line.strip(): continue
+    exp,stmt = line.split('=>')
+    grammar[exp.strip()] = [s.split() for s in stmt.split('|')]
+print(grammar['Adj*'])
+def generate(gram,target):
+    # target 可以扩展
+    if target not in gram: return target
+    return ''.join(generate(gram,t) for t in  random.choice(gram[target]))
+    # 如果t 不在g 中 就直接返回 蓝色的不在adj 里 就直接生成蓝色的
+    # 不在的话就可以扩展我们就随机的选择一个 t  把每一个继续扩展然后把值拼起来
+    # if target in gram:
+    #     new_expanded = random.choice(gram[target])
+    #     return ''.join(generate(gram,t)for t in new_expanded)
+    # else:
+    #     return target
+# print(generate(gram = grammar,target = 'Adj*'))
+human = """
+human = 自己 寻找 活动
+自己 = 我 | 俺 | 我们 
+寻找 = 看看 | 找找 | 想找点
+活动 = 乐子 | 玩的
+"""
+host = """
+host = 寒暄 报数 询问 业务相关 结尾 
+报数 = 我是 数字 号 ,
+数字 = 单个数字 | 数字 单个数字 
+单个数字 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 
+寒暄 = 称谓 打招呼 | 打招呼
+称谓 = 人称 ,
+人称 = 先生 | 女士 | 小朋友
+打招呼 = 你好 | 您好 
+询问 = 请问你要 | 您需要
+业务相关 = 玩玩 具体业务
+玩玩 = 耍一耍 | 玩一玩
+具体业务 = 喝酒 | 打牌 | 打猎 | 赌博
+结尾 = 吗？
+"""
+def create_grammar(grammar_str,split='=>',linr_sp='\n'):
+    grammar = {}
+    for line in grammar_str.split(linr_sp):
+        if not line.strip(): continue
+        exp,stmt = line.split(split)
+        grammar[exp.strip()] = [s.split() for s in stmt.split('|')]
+    return grammar
+print(grammar['Adj*'])
+choice = random.choice
+def generate(gram,target):
+    # target
+    if target not in gram: return target
+    expaned = [generate(gram,t) for t in choice(gram[target])]
+    return  ''.join([e if e != '/n' else '\n' for e in expaned if e != 'null' ])
+# print(generate(gram = grammar,target = 'Adj*'))
+# example_grammar = create_grammar(host,split='=')
+# print(example_grammar)
+# for i in range(20):
+    # print(generate(gram = example_grammar,target = 'host'))
+#做一个程序 输入数据变化的时候我们的程序不用重写
+#AI思考的问题 如何你让那个自动化解决问题输入变了 但是我们的方法不用变
+programming = """
+stmt => if_exp | while_exp | assignment
+assignment => var = var
+if_exp => if  ( var )  { /n ....stmt }
+while_exp => while ( var )  { /n ....stmt }
+var => chars number
+chars => char | char char
+char => a | b | c  | d | e
+number => 1 | 2 | 3 
+"""
+# example_grammar = create_grammar(programming,split = '=>')
+# print(generate(gram = example_grammar,target = 'stmt'))
+#基于概率的问题
+import random
+nums = random.choice(range(100))
+filename = r'D:\AI\项目\train.txt\train.csv'
+# filename = 'https://raw.githubusercontent.com/Computing-Intelligence/datasource/master/movie_comments.csv'
+import pandas as pd
+content = pd.read_csv(filename,encoding='gb18030',low_memory=False)
+#python encoding
+# print(contents.head())
+articles = content['comment'].tolist()
+# print(articles[20635])
+# print(len(articles))
+# print(len(articles))
+#本次卡壳的原因就是 文件不能直接改后缀名，要重新更改 还有后面多了个参数
+import jieba
+from collections import  Counter
+# whit_jieba_cut = Counter(jieba.cut(articles[0]))
+# print(whit_jieba_cut.most_common())
+#这个就是找出谁多少个
+
+# articles_clean  = [''.join(token(str(a)))for a in articles]
+#这个是把里面的东西用正则匹配掉然后下面的函数  去掉乱七八糟的东西
+# def cut(string): return list(jieba.cut(string))
+# articles_words = [cut(string) for string in content]
+# print(articles_words[1])
+import  re
+def token(string):
+    return re.findall('\w+',string)
+# print(''.join(token(articles[0])))
+#去掉了所有的标点符号
+# artile_num = 10000
+articles_two = [''.join(token(str(a)))for a in articles]
+# print(articles_two)
+# print(articles_two[0])
+
+TOKENS = []
+from functools import reduce
+from operator import add,mul# mul 就是给他们乘起来
+# print(reduce(add,[1,2,3,4,5]))
+def cut(string): return list(jieba.cut(string))
+articles_words = [cut(string) for string in articles_two[:10000]]
+# print(articles_words)
+TOKENS = reduce(add,articles_words)
+# print(len(TOKENS))
+# print(TOKENS)
+# whit_jieba_cut = Counter(jieba.cut(articles[0]))
+# print(whit_jieba_cut.most_common())
+from collections import  Counter
+words_count = Counter(TOKENS)
+a = words_count.most_common(10)
+# print(a)
+frequiences = [f for w,f in words_count.most_common(10)]
+x = [i for i in range(10)]
+# %matplotlib inline
+import matplotlib.pyplot as plt
+plt.plot(x,frequiences)
+# plt.show()
+#展示图像
+import  numpy as np
+plt.plot(x,np.log(frequiences))#指数
+# def prob_1(word):
+#     return words_count[word]/len(TOKENS)#单词概率
+# print(prob_1('我们'))
+#联合概率
+# TOKEN_2_Gram = [''.join(map(str,TOKENS[i:i+2]) for i in range(len(TOKENS[:-2])))]
+TOKENS = [str(t) for t in TOKENS]
+TOKEN_2_GEAM = [''.join(TOKENS[i:i+2]) for i in range(len(TOKENS[:-2]))]
+# TOKEN_2_GEAM[:10]
+words_count_2 = Counter(TOKEN_2_GEAM)
+def prob_1(word): return words_count[word] / len(TOKENS)
+def prob_2(word1,word2):
+    if word1+word2 in words_count_2:return words_count_2[word1+word2]/len(TOKEN_2_GEAM)
+    else:
+        return (prob_1(word1)+prob_1(word2))/2
+# print(prob_2('在','飞翔'))
+def get_probablity(sentence):
+    words = cut(sentence)
+    for i , word in enumerate(sentence[:-1]):
+        next_ = sentence[i+1]
+        sentence_pro = 1
+        probabilty = prob_2(word,next_)
+        sentence_pro *= probabilty
+    return sentence_pro
+# print(get_probablity('我今天开心的吃饭'))
+# 2 - gram
+#简化成三个参数就是 3 - gram
+example_grammar = create_grammar(host,split='=')
+for sen in [generate(gram=example_grammar, target='host')for i in range(10)]:
+    print(('sentence: {} with Prb:{}').format(sen,get_probablity(sen)))
+
+
+
+
+
+'''
+simple_grammar = """ 
+    sentence => noun_phrase verb_phrase
+    nou_phrase => Article Adj*noun
+    Adj* => null | Adj Adj*
+    verb_phrase => verb noun_phrase
+    Article => 一个 | 这个
+    noun => 女人 | 篮球 | 桌子 | 小猫
+    verb => 看着 | 坐着 | 听着| 看见
+    Adj => 蓝色的 | 好看的 | 小小的"""
+def ex_grammar(exce):
+    grammar = {}
+    for line in exce.split('\n'):
+        if not line.strip(): continue
+        exp,stmt = line.split('=>')
+        grammar[exp.strip()] = [s.split() for s in stmt.split('|')]
+
+
+# print(grammar['Adj*'])
+import random
+choice = random.choice
+def generate(gram,target):
+    if target not in gram: return target
+
+    return ''.join(generate(gram, t) for t in choice(gram[target]))
+exc_grammar = ex_grammar(simple_grammar)
+print(exc_grammar)
+'''
+
+
+
+
+-   -   -   - 任务：#英雄联盟显示确定玩家 选择客户端 进入大区 选择模式 选择位置 选择英雄
+lol = '''
+game = 玩家 选择客户端 进入大区 选择模式 选择位置 选择英雄 结语
+玩家 = 欢迎 账号 号玩家，
+账号 = 单个数字 | 单个数字 单个数字 | 单个数字 单个数字 单个数字
+单个数字 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 
+选择客户端 = 您从 客户端 即将到达
+客户端 = wegame | 游戏客户端 | 烧钱游戏客户端
+进入大区 = 大区 的世界，
+大区 = 比尔吉沃特 | 网二德玛西亚 | 弗雷尔卓德 | 无畏先锋 | 五恕瑞玛 | 扭曲丛林
+选择模式 = 您选择了 模式 的
+模式 = 匹配 | 快乐 | 排位 | 大乱斗 | 送人头 
+选择位置 = 游戏位置 位置，
+游戏位置 = 快乐 | 中单 | 偷家 | 贼娃子 | 铁陀螺 | 送人头
+选择英雄 = 您将使用 英雄 进行您的二百五峡谷之旅，
+英雄 = 快乐风男 | 儿童劫 | 艾克 | 铁陀螺 | 腰子 | 跳跳虎
+结语 = 最后祝您游戏玩的 感受
+感受 = 开心 | 悲伤 | 绝望 | 快乐
+'''
+import random
+
+# grammar = { }
+# for line in lol.split('\n'):
+#     if not line.strip(): continue
+#     exp,stmt = line.split('=>')
+#     grammar[exp.strip()] = [s.split() for s in stmt.split('|')]
+def create_grammar(grammar_str,split='=',linr_sp='\n'):
+    grammar = {}
+    for line in grammar_str.split(linr_sp):#把传入的参数给格式化 存到line里
+        # 我们来说以下 split 这个就是一个分割符 ('.')就是以 ' '为分割 .为界限('.',2)分割前三个
+        #('.',2)[2]还能选取个数 很神奇吧  前面如果是 u1 u2 u3 = 还可以把其中的内存放到里面 也就是所谓的赋值
+        if not line.strip(): continue #如果这句话没有什么格式的话，那么就继续
+        exp,stmt = line.split(split)   #去掉上面定义的等号 然后把等号两边的值分别赋值给 第一个和第二个
+        grammar[exp.strip()] = [s.split() for s in stmt.split('|')]
+        #把东西在{}里面的[]中存进去  格式化的名字等于 格式化的字但是字的话吧|号给去掉了
+    return grammar #想要什么就返回什么
+# print(lol['game'])
+# print(create_grammar(lol))
+choice = random.choice #进行函数的赋值 这样可以简化操作 高级程序员的话 能用一步写的代码绝对不会用第二行
+def play(gram, target):
+    if target not in gram: return target
+    #函数是什么呢？ 就是为了实现某些功能的一些代码块，真正实现这个程序的往往是主函数 就是用来调用的函数
+    # 如果 第二个参数不在第一个参数里面就返回 第二个参数 这一部是防止程序bug
+    expand = [play(gram,t) for t in random.choice(gram[target])]
+    # print(expand)
+    #它是一个列表 里面有两个函数 在里面执行for循环 这里用到了递归 最后形成循环后的列表
+    #在for循环前面有东西就是按照前面所定义的一些格式发挥出一个循环后的数据 放在列表之中
+    return  ''.join([e if e != '/n' else '\n' for e in expand if e != 'null' ])
+    #用于拼接字符 生成新的字符 前面是空的分隔符 可以有内容 后面的就是拼接的东西
+    #里面的东西 里面的东西是 返回以e为格式的 如果e不等于错的 那就是对的 如果是的话就 循环expend里的东西前提的不为空
+
+# play(gram = lol,target = 'game')
+# print(play(gram = lol,target = 'Adj*'))
+example_grammar = create_grammar(lol,split='=')
+# print(example_grammar)
+# print(example_grammar)
+for i in range(20):
+    a=play(gram = example_grammar,target = 'game')
+# print(a)
+#这个就是没有分行的
+# for i in range(20):
+#     print(play(gram = example_grammar,target = 'host'))
+# nums = choice(range(100))
+filename = r'D:\AI\项目\train.txt\train.csv'
+#引入要搞的文件，文件里面就是数据 ，用数据来使content变得正确
+import pandas as pd
+content = pd.read_csv(filename,encoding='gb18030',low_memory=False)
+#模块需要学习但是 这个就是用这个模块读取pd的模式
+# print(content.head())
+articles = content['comment'].tolist()
+#tolist就是把矩阵变成列表
+# print(articles[100])
+# print(articles)
+import jieba
+import re
+def note(string):
+    return re.findall('\w+',string)#正则表达式匹配只要文字
+articles_two = [''.join(note(str(a))) for a in articles]
+#这一有一个str 是因为join只能够转化str类型的数据
+#现在Two里面的数据就是拼接后的没有多余符号的文本
+# print(articles_two)
+
+from functools import reduce
+#这个函数就是 reduce（） 已全面函数的方式 来计算后面的值
+from operator import add,mul
+def cut(string): return list(jieba.cut(string))
+articles_words = [cut(string) for string in articles_two[:10000]]
+# print(articles_words)
+#把前10000的值存到里面用jieba跑一遍
+#jieba就是把里面的内容 分成几个词几个词的那种
+TOKENS = reduce(add,articles_words)
+# print(TOKENS)
+
+from collections import  Counter
+#这个就是计数器
+words_count = Counter(TOKENS)
+#给其中每一个词出现的次数然后给计数
+a = words_count.most_common(10)
+# print(a)
+frequiences = [f for w,f in a]
+# print(frequiences)#最多的个数 单数没有数据
+#返回10个元素
+# x = [i for i in range(10)]
+# print(x)
+TOKENS = [str(t) for t in TOKENS]
+#转格式也可以用这种这种方法
+# print(TOKENS)
+TOKEN_2_GEAM = [''.join(TOKENS[i:i+2]) for i in range(len(TOKENS[:-2]))]
+words_count_2 = Counter(TOKEN_2_GEAM)
+def prob_1(word): return words_count[word] / len(TOKENS)
+def prob_2(word1,word2):
+    if word1+word2 in words_count_2:return words_count_2[word1+word2]/len(TOKEN_2_GEAM)
+    else:
+        return (prob_1(word1)+prob_1(word2))/2
+# print(prob_2('在','飞翔'))
+def get_probablity(sentence):
+    # words = cut(sentence)
+    for i , word in enumerate(sentence[:-1]):
+        next_ = sentence[i+1]
+        sentence_pro = 1
+        probabilty = prob_2(word,next_)
+        sentence_pro *= probabilty
+    return sentence_pro
+print(get_probablity('你是我的小呀小苹果'))
+# print(get_probablity('我今天开心的吃饭'))
+# 2 - gram
+#简化成三个参数就是 3 - gram
+example_grammar = create_grammar(lol,split='=')
+# for sen in [play(gram=example_grammar, target='game')for i in range(10)]:
+    # print(('sentence: {} with Prb:{}').format(sen,get_probablity(sen)))
+
+#上面注释的就是循环输出
+
+# def play_best(keys,sens):
+#     for sen in [play(gram=example_grammar, target='game')for i in range(10)]:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
