@@ -1,0 +1,779 @@
+ #语言模型
+ # 一个语言的概率为0  OOV 经 典问题
+ #解决办法 就给概率为0  pr(w_o) = a <p(w_1)
+ #平滑问题 language Model :Smooth
+
+
+import random
+ # a = '''adj* =>adj* adj | adj null '''
+def adj():return random.choice('beautiful| handsome | strange'.split('|')).split()[0]
+# print(adj())
+#lambda s : s*2
+def adj_star_2(): return random.choice([lambda :'',lambda : adj()+adj_star_2()])()#最后面这个括弧就是运行的意思
+print(adj_star_2())
+def adj_star(): return random.choice(['',adj()+adj_star()])
+#2和3 的效果是一样的
+# print(adj_star_2())
+#lambda
+
+
+numbers =[1,7,54,-7,5,-8,-9]
+# print(sorted(numbers,key=func))
+# print(sorted(numbers,key=absolute))  #这个的意思就是 后面的key 就是可以变化的取值情况
+def absolute(number):
+        if number <0: return -1*number
+        else: return number
+
+# print(sorted(numbers,key=absolute))  #这个的意思就是 后面的key 就是可以变化的取值情况
+
+
+Lists = map(abs,numbers) #对于Python3.x需要用list函数对map的返回值转换为列表
+# print(sorted(list(Lists)))
+# [1,2,3,4,5,6]
+# print(absolute(-486))
+def mod_5(number):
+    return number%5  #对5取余的情况
+sorted(numbers,key=lambda  x:x%5)   #就是一个函数 然后x为参数 ：后面的是一个返回值
+mod_5_lambda  = lambda x:x%5
+#匿名函数 也就是可以看成一个函数体
+#  就是 a = lambda x：x*5    如果要调用就是 a（）  里面就是参数 然后 以返回值的规定范围来确定返回值
+
+# print(sorted(numbers,key = lambda  x:))
+#------------------------------------------------新课
+#人们希望机器能够自动的解决问题  现在的AI 都是分类和预测的问题
+#问题抽象起来
+#决策和推理问题  => 进行决定 输入 满足情况下就进行输出 完成一个完整的打码描绘图像
+#=> 搜索问题  地图导航 AI所解决的问题
+#小范围的推理系统
+coordination_source = """
+{name:'兰州', geoCoord:[103.73, 36.03]},
+{name:'嘉峪关', geoCoord:[98.17, 39.47]},
+{name:'西宁', geoCoord:[101.74, 36.56]},
+{name:'成都', geoCoord:[104.06, 30.67]},
+{name:'石家庄', geoCoord:[114.48, 38.03]},
+{name:'拉萨', geoCoord:[102.73, 25.04]},
+{name:'贵阳', geoCoord:[106.71, 26.57]},
+{name:'武汉', geoCoord:[114.31, 30.52]},
+{name:'郑州', geoCoord:[113.65, 34.76]},
+{name:'济南', geoCoord:[117, 36.65]},
+{name:'南京', geoCoord:[118.78, 32.04]},
+{name:'合肥', geoCoord:[117.27, 31.86]},
+{name:'杭州', geoCoord:[120.19, 30.26]},
+{name:'南昌', geoCoord:[115.89, 28.68]},
+{name:'福州', geoCoord:[119.3, 26.08]},
+{name:'广州', geoCoord:[113.23, 23.16]},
+{name:'长沙', geoCoord:[113, 28.21]},
+//{name:'海口', geoCoord:[110.35, 20.02]},
+{name:'沈阳', geoCoord:[123.38, 41.8]},
+{name:'长春', geoCoord:[125.35, 43.88]},
+{name:'哈尔滨', geoCoord:[126.63, 45.75]},
+{name:'太原', geoCoord:[112.53, 37.87]},
+{name:'西安', geoCoord:[108.95, 34.27]},
+//{name:'台湾', geoCoord:[121.30, 25.03]},
+{name:'北京', geoCoord:[116.46, 39.92]},
+{name:'上海', geoCoord:[121.48, 31.22]},
+{name:'重庆', geoCoord:[106.54, 29.59]},
+{name:'天津', geoCoord:[117.2, 39.13]},
+{name:'呼和浩特', geoCoord:[111.65, 40.82]},
+{name:'南宁', geoCoord:[108.33, 22.84]},
+//{name:'西藏', geoCoord:[91.11, 29.97]},
+{name:'银川', geoCoord:[106.27, 38.47]},
+{name:'乌鲁木齐', geoCoord:[87.68, 43.77]},
+{name:'香港', geoCoord:[114.17, 22.28]},
+{name:'澳门', geoCoord:[113.54, 22.19]}
+"""
+#把这段字符作为数据结构
+city_location = {
+    '香港' :(114.17,22.28)
+}
+#正则表达式的应用
+#输入-》字典
+test_string ='''{name:'兰州', geoCoord:[103.73, 36.03]}'''
+import re
+pattern_0 = r"name:'\w+'"
+pattern_1 = r"name:'(\w+)'"
+# print(re.findall(pattern_0,test_string))
+#所有满足定义的Python
+pattern_2 = r"geoCoord:\[(\d+.\d+),\s(\d+.\d+)\]"
+# print(re.findall(pattern_2,test_string))
+pattern_3 = r"name:'(\w+)',\s+geoCoord:\[(\d+.\d+),\s(\d+.\d+)\]"
+# print(re.findall(pattern_3,test_string)[0])
+
+#这些以上的都是一些没有用的，是正则的测试
+pattern_4 = re.compile(r"name:'(\w+)',\s+geoCoord:\[(\d+.\d+),\s(\d+.\d+)\]")
+for line in  coordination_source.split('\n'):
+    city_info = pattern_4.findall(line)
+    if not city_info:continue
+    #已经找到了的话  一般这个位置上的都是这个意思 使程序更加的严谨
+    city,long,lat = city_info[0]
+    long,lat = float(long),float(lat)
+    city_location[city] = (long,lat)
+
+# print(city_location)
+print(city_location)
+
+
+
+
+
+
+# re.findall(pattern_4,test_string)[0]
+# 根据数据画出地图 投射在平面图形会有拉伸变换
+"""
+Calculate the Haversine distance.
+
+Parameters
+----------
+origin : tuple of float
+    (lat, long)
+destination : tuple of float
+    (lat, long)
+
+Returns
+-------
+distance_in_km : float
+
+Examples
+--------
+origin = (48.1372, 11.5756)  # Munich
+destination = (52.5186, 13.4083)  # Berlin
+round(distance(origin, destination), 1)
+504.2"""
+import math
+def geo_distance(origin, destination):
+    lat1, lon1 = origin
+    lat2, lon2 = destination
+    radius = 6371  # km
+
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = (math.sin(dlat / 2) * math.sin(dlat / 2) +
+         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+         math.sin(dlon / 2) * math.sin(dlon / 2))
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    d = radius * c
+    return d
+def get_geo_distance(city1,city2):
+    return geo_distance(city_location[city1],city_location[city2])
+
+print(get_geo_distance('上海','杭州'))
+
+
+import networkx as nx  #是一个专门用来做图算法之类的东西
+cities = list(city_location.keys())
+city_graph = nx.Graph()
+city_graph.add_nodes_from(cities)
+import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['SimHei']
+# plt.rcParams['axes.unicode_minus'] = False
+# plt.savefig('fig.png',bbox_inches='tight')
+# plt.figure(figsize=(8,8))#设置画布大小
+
+
+
+
+nx.draw(city_graph,city_location,with_labels=True,node_size=20)
+# plt.savefig('fig.png',bbox_inches='tight')
+plt.show()
+# simple_connection_info = {
+#     '':[]
+# }
+#指定字典对应关系
+
+
+
+# simple_connection_info = {
+#     '北京':['太原','沈阳'],
+#     '太原':['北京','西安','郑州'],
+#     '兰州':['西安'],
+#     '郑州':['太原'],
+#     '西安':['兰州','长沙'],
+#     '长沙':['福州','南宁'],
+#     '沈阳':['北京']
+# }
+simple_connection_info= {
+    '北京':['太原','沈阳'],
+    '太原':['北京','西安','郑州'],
+    '兰州':['西安'],
+    '郑州':['太原'],
+    '西安':['兰州','长沙'],
+    '长沙':['福州','南宁'],
+    '沈阳':['北京']
+}
+nx.draw(nx.Graph(simple_connection_info),city_location,with_labels=True,node_size=20) #线路连接
+plt.show()
+
+def search(start,destination,connection_graph,sort_candidate):
+    pathes = [[start]]
+    visitied = set()
+    while pathes:   #当我们发现还有路的时候我们就
+        path = pathes.pop(0)
+        #每次只拿第一个  取最短的那条路 最早扩展的路节点最少  短程进行扩展
+        froninter = path[-1]
+
+        if froninter in visitied :continue
+
+        successors = connection_graph[froninter]
+
+        for city in successors:
+
+            if city in path:continue
+
+            new_path = path + [city]
+
+            pathes.append(new_path)
+
+            if city == destination: return new_path
+        visitied.add(froninter)
+        pathes = sort_candidate(pathes)#可以继续优化函数 让函数的功能变多 搜索策略进行控制
+
+
+def transfer_stations_first(pathes):
+    return sorted(pathes, key=len)
+
+
+def transfer_as_much_possible(pathes):
+    return sorted(pathes,key=len,reverse=True) #相反的路径
+
+def shortest_path_first(pathes):#最短距离优先
+    if len(pathes) <= 1: return pathes
+    def get_path_distance(path):
+        distance = 0
+        for station in path[:-1]:
+            distance += get_geo_distance(station,path[-1])
+
+        return distance
+    return sorted(pathes,key=get_path_distance)
+
+print(search('兰州','福州',simple_connection_info,sort_candidate=shortest_path_first))
+
+#s上面的就是知道了有路可以走就把它的第一个拿出来 进行访问 看他后面还有什么可以走的
+#搜索过程
+#尽可能宽的扩展自己
+def pretty_print(cities):
+    print('--->'.join(cities))
+# print(pretty_print(search('北京','福州',simple_connection_info)))
+#沿着一个方向一直走  depth first search
+
+
+
+
+
+from collections import  defaultdict as dft
+threshold = 300
+city_connection = dft(list)
+for c1 in city_location:
+    for c2 in city_location:
+        if c1 == c2: continue
+
+        distance = get_geo_distance(c1,c2)
+        if distance < threshold:
+            city_connection[c1].append(c2)
+            city_connection[c2].append(c1)
+# print(city_connection)
+city_with_road = nx.Graph(city_connection)
+nx.draw(city_with_road,city_location,with_labels=True,node_size=20)
+plt.show()
+
+
+
+
+
+from collections import  defaultdict as dft
+simple_connection_info_src= {
+    '北京':['太原','沈阳'],
+    '太原':['北京','西安','郑州'],
+    '兰州':['西安'],
+    '郑州':['太原'],
+    '西安':['兰州','长沙'],
+    '长沙':['福州','南宁'],
+    '沈阳':['北京']
+}
+
+simple_connection_info = dft(list)# 如果没有给定的地方 比如说梵蒂冈 那就返回一个空列表
+simple_connection_info.update(simple_connection_info_src)
+# simple_connection_info_src
+#给定一个连接关系 给定一个初始的点 我们要把图中的所有元素一步一步获得出来
+
+def bfs(graph,start):
+    '''
+    breath first search
+    '''
+    visited = [start]
+    seen = set()
+    while visited:
+        froninter = visited.pop()
+
+        if froninter in seen:continue
+
+        for successor in graph[froninter]:
+            if successor in seen :continue
+            print(successor)
+            # visited.append(successor)
+
+            # visited += [successor]
+            visited =  visited + [successor] #每次都扩展最新的点 持续的扩展下去 深度
+
+
+            # visited = [successor] + visited #每次扩展都先考虑已经发现了的老的点 广度
+            #扩展顺序其实是决定了我们的深度优先还是广度优先
+        seen.add(froninter)
+    return seen
+
+number_grpah = dft(list)
+number_grpah.update({
+    1:[2,3],
+    2:[1,4],
+    3:[1,5],
+    4:[2,6],
+    5:[3,7]
+})
+
+# print(bfs(number_grpah,1))
+
+# print(bfs(simple_connection_info,'北京'))
+#以上是广布优先
+
+
+# print(search('北京','南京',city_connection))
+
+# print(pretty_print(search('北京','广州',city_connection)))
+#
+# print(pretty_print(search('北京','南昌',city_connection,sort_candidate=transfer_stations_first)))
+# #最小换乘优先
+# print(pretty_print(search('北京','广州',city_connection,sort_candidate=transfer_stations_first)))
+#
+# print(pretty_print(search('北京','广州',city_connection,sort_candidate=transfer_as_much_possible)))
+# #最长路径
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+#------------下面没有
+def dfs_2(graph,start):
+    ''''''
+    breath first search
+    ''''''
+    visited = [start]
+    seen = set()
+    while visited:
+        froninter = visited.pop()
+
+        if froninter in seen:continue
+
+        for successor in graph[froninter]:
+            if successor in seen:continue
+            # print(successor)
+            # visited.append(successor)
+            # visited += [successor]
+            visited = visited+[successor]#每次扩展都是最先发现的点  深度
+            # visited = [successor]+visited#每次扩展都先考虑已经发现了的老的点 广度
+            #所以说 扩展顺序其实就是决定了我们是深度优先还是广度优先
+            #两种策略
+
+        seen.add(froninter)
+    return seen
+
+# print(dfs_2(simple_connection_info,'北京'))
+
+# number_grpah = dft(list)
+# number_grpah.update({
+#     1:[2,3],
+#     2:[1,4],
+#     3:[1,5],
+#     4:[2,6],
+#     5:[3,7]
+# })
+# print(dfs_2(number_grpah,1))
+#队列
+
+
+# 这个就是定义自己的连接线路的情况
+# print(simple_connection_info['西安'])
+nx.draw(nx.Graph(simple_connection_info),city_location,with_labels=True,node_size=10)
+# plt.show()
+def search(start,destination,connection_grpah):
+    pathes = [[start]]    #定义一个变量
+
+    visitied = set()
+
+    while pathes:               #当我们发现还有路的时候
+        path = pathes.pop(0)
+        froninter = path[-1]
+
+        if froninter in visitied:continue
+
+        successors = connection_grpah[froninter]
+
+        for city in successors:
+            if froninter in visitied:continue
+
+            new_path = path + [city]
+
+            pathes.append(new_path)
+
+            if city == destination:return new_path
+
+        visitied.add(froninter)
+
+
+#搜索过程： 点连接的点有哪些 再把点进行扩展 边沿扩展 每一次尽可能远的观察
+ #广阔优先遍历
+def pretty_print(cities):
+    print('**---->'.join(cities))
+# print(pretty_print(search('兰州','福州',simple_connection_info)))
+#以上是一种搜索方式
+#Breath first search
+#深度搜索只能够搜索一次
+# def search2(start,destination,connection_grpah):
+#     pathes = [[start]]    #定义一个变量
+#
+#     visitied = set()
+#
+#     while pathes:               #当我们发现还有路的时候
+#         path = pathes.pop(0)
+#         froninter = path[-1]
+#
+#         if froninter in visitied:continue
+#
+#         successors = connection_grpah[froninter]
+#
+#         for city in successors:
+#             if froninter in visitied:continue
+#
+#             new_path = path + [city]
+#
+#             pathes.append(new_path)
+#
+#             if city == destination:return new_path
+#
+#         visitied.add(froninter)
+
+# def Mionsmt(a,b):
+#     c = a*b
+#     w = c**2
+#     return w
+# print(Mionsmt(2,3))
+# print('2')
+#
+# s = True
+#
+# while s:
+#     a = int(input('what is a number?'))
+#     if a==2:
+#         print('对了')
+#         break
+#     else:print('重试一下')
+#-----------------------
+
+
+'''
+ #根据数据生成一个函数完成我们的期欲
+from sklearn.datasets import load_boston
+data = load_boston()
+# print(data)
+X,Y = data['data'],data['target']
+# print(X[:,0])
+# print(Y[0])
+# print(data['feature_names'])
+# print(data['DESCR'])
+# plt.scatter(X[:,5],Y)
+# plt.show()
+#根据数据自动生成f（x）
+def draw_rw_and_price():
+    plt.scatter(X[:,5],Y)
+# plt.show()
+import matplotlib.pyplot as plt
+
+fig = plt.figure()#和下面是配套的
+import random
+def price(rm,k,b):
+    'f(x) = kx + b'
+    return k * rm + b
+X_rm = X[:,5]
+k = random.randint(-100,100)
+b = random.randint(-100,100)
+price_by_random_k_and_b = [price(r,k,b) for r in X_rm]
+plt.scatter(X_rm,price_by_random_k_and_b)
+plt.scatter(X[:,5],Y)
+fig.tight_layout()
+plt.show()#图重合上了代表更好  中间的距离就是损失值
+def loss(y,y_hat):#损失值
+    return  sum((y_i-y_hat_i)**2 for y_i,y_hat_i in zip(list(y),list(y_hat)))/len(list(y))
+# print(loss([1,1,1],[2,2,2]))
+
+def partial_k(x,y,y_hat):
+    n = len(y)
+    gradient = 0
+    for x_i,y_i,y_hat_i in zip(list(x),list(y),list(y_hat)):
+        gradient += (y_i - y_hat_i) * x_i
+    # return -2 / n * sum(y_i - y_hat_i) * x_i for x_i,y_i,y_hat_i in zip(list(x),list(y),list(y_hat))
+    return -2/n*gradient
+# import  random
+def partial_b(x,y,y_hat):
+    n = len(y)
+    gradient = 0
+    for y_i, y_hat_i in zip( list(y), list(y_hat)):
+        gradient += (y_i - y_hat_i)
+    return -2 / n * gradient
+
+
+
+
+
+
+X_rm = X[:,5]
+# print(random.random()*20000-10000)#初始的就是0-1之间的数值
+trying_times = 10000
+min_loss = float('inf')
+best_k,best_b = None,None
+for i in range(trying_times):
+    k = random.random()*200 - 100
+    b = random.random()*200 - 100
+    price_by_random_k_and_b = [price(r,k,b) for r in X_rm]
+    current_loss = loss(Y,price_by_random_k_and_b)
+    if current_loss < min_loss:
+        min_loss = current_loss
+        best_k,best_b = k,b
+        # print('time{},k:{},b:{},loss::{}'.format(i,best_k,best_b,min_loss))
+# plt.scatter(X_rm,price_by_random_k_and_b)
+
+#--------------------梯度下降
+trying_times = 1000
+min_loss = float('inf')
+best_k,best_b = None,None
+
+best_k = random.random()*200 - 100
+best_b = random.random()*200 - 100
+direction = [#这个是四个方向
+    (+1,-1),
+    (+1,+1),
+    (-1,-1),
+    (-1,+1),
+]
+current_direction = random.choice(direction)
+scalar = 0.1
+update_time = 0
+for i in range(trying_times):
+    k_direction,b_direction = current_direction
+    current_k ,current_b = best_k + k_direction*scalar,best_b + b_direction*scalar
+    price_by_k_and_b = [price(r,current_k,current_b) for r in X_rm]
+    current_loss = loss(Y,price_by_k_and_b)
+    if current_loss < min_loss:#如果他没有变的更好
+        min_loss = current_loss
+        best_k,best_b = current_k,current_b
+
+        next_direction = current_direction
+        update_time += 1
+        if update_time % 10 == 0:#限定的作用
+            pass
+            # print('time{},k:{},b:{},loss::{}'.format(i, best_k, best_b, min_loss))
+    else:
+        # next_direction = random.choice(list(set(direction) - {next_direction}))
+        next_direction = random.choice(direction)#如果让它每次都向着更接近的方向走
+#如果我们想得到更具爱的更新 在更短的时间内获得更好的结果，我们需要一件事情
+# 找对改变的方向
+#如何找到改变对象的方向    ：
+# 有一个东西监督这他 让他更好的继续走  这个东西就像是一个学习过程 这就是叫监督学习
+
+
+
+#-----------导数
+#一维空间叫导数
+#多维叫做梯度
+#第三节课补第二节课没补完的
+#a--b 点怎么走 这是一个决策过程  基于搜索
+#神经网络SVM ->bp算法 相当于会打字
+#偏导
+
+
+
+
+
+
+
+
+
+-   -   -   -   -   -   -   - 作业：
+
+import request
+from bs4 import BeautifulSoup
+import  re
+import requests
+def cut(pattern,text_string):
+    return re.findall(pattern,text_string)
+url = 'http://bj.bendibao.com/ditie/linemap.shtml'
+response = requests.get(url)
+text_find = response.text
+subway_line = 'http://bj.bendibao.com/ditie/map_197.shtml'
+pattern_subway_line = re.compile(r'(/ditie/map_\d+.shtml)')
+subway_lines_test = list(set(cut(pattern_subway_line,text_find)))
+# print(subway_lines_text)
+subway_lines = ['http://bj.bendibao.com' + urls for urls in subway_lines_test]
+# print(subway_lines)
+pattern_station_untransferable = re.compile(r'<a\s+class="link"\s+href="/ditie/\w+_\w+.shtml"\s+target="_blank">(\w+)</a>') # 不可换乘的正则表达式
+pattern_station_transferable = re.compile(r'<a\s+class="link"\s+href="/ditie/\w+_\w+.shtml">(\w+)</a>') # 可换乘的正则表达式
+def spider_line_x_station(soup_a,pattern_station_transfer,pattern_station_untransfer):
+    line_x = []
+
+    for line in soup_a:
+        station = cut(pattern_station_transfer,str(line))
+
+        if len(station) == 0:
+            station = cut(pattern_station_untransfer,str(line))
+
+        if len(station) != 0:
+            line_x.append(station[0])
+    return line_x
+def get_title_name(soup_title):
+    return str(soup_title).split(',')[0].lstrip('<title>')[4:-3]
+subway_lines_stations = {}
+for line_url in subway_lines:
+    response = requests.get(line_url)
+    line_html = response.text
+
+    soup = BeautifulSoup(line_html,features="lxml")
+    name = get_title_name(soup.title)
+    soup_a = soup.find_all('a')
+
+    stations = spider_line_x_station(soup_a,pattern_station_transferable,pattern_station_untransferable)
+    subway_lines_stations[name] = stations
+
+# print(subway_lines_stations)
+
+url_coordinate= 'http://map.amap.com/service/subway?_1469083453978&srhdata=1100_drw_beijing.json'
+response_coordinate = requests.get(url_coordinate)
+html_text = response_coordinate.text
+# print(html_text)
+station_location = {}
+def cut(pattern,string):
+    return re.findall(pattern,string)
+pattern_station = re.compile(r'"sl":"(\d+.\d+),(\d+.\d+)","sid":"\d+","sp":"[\w\s]*","udsi":"\d+;\d+","n":"(\w+)"')
+station_list = cut (pattern_station,html_text)
+# print(station_list)
+for lon,lat,name in station_list:
+    if name not in station_list:
+        station_location[name] = (float(lon),float(lat))
+# print(station_location['燕山'])
+import math
+def geo_distance(origin,destination):
+    lat1,lon1 = origin
+    lat2,lon2 = destination
+    radius = 6371
+
+    dlat = math.radians(lat2-lat1)
+    dlon = math.radians(lon2-lon1)
+    a = (math.sin(dlat / 2) * math.sin(dlat / 2) +
+         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+         math.sin(dlon / 2) * math.sin(dlon / 2))
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    d = radius * c
+
+    return d
+def get_station_distance(station1,station2):
+    return geo_distance(station_location[station1],station_location[station2])
+
+# print(get_station_distance('平安里','公主坟'))
+import networkx as nx
+import  matplotlib.pyplot as plt
+plt.figure(3,figsize=(18,18))
+station_graph = nx.Graph()
+station_graph.add_nodes_from(list(station_location.keys()))
+# print(station_graph.nodes())
+nx.draw(station_graph,station_location,node_size = 10)
+# plt.show()
+
+from collections import defaultdict
+stations_connection = defaultdict(list)
+# print(stations_connection)
+for line in subway_lines_stations.keys():
+    for i,station in enumerate(subway_lines_stations[line][:-1]) :
+        if station == subway_lines_stations[line][i+1]:continue
+
+        if subway_lines_stations[line][i+1] not in stations_connection[station]:
+            stations_connection[station].append(subway_lines_stations[line][i+1])
+        if station not in stations_connection[subway_lines_stations[line][i+1]]:
+            stations_connection[subway_lines_stations[line][i+1]].append(station)
+
+# print(stations_connection['车道沟'])
+# fig = plt.figure()
+stations_graph_connection = nx.Graph(stations_connection)
+stations_graph_connection.edges()
+
+station_location['积水潭'] = (116.379185,39.954765)
+station_location['车道沟'] = (116.30724,39.951215)
+plt.rcParams['font.sans-serif'] = ['SimHei']
+
+# fig.tight_layout()
+plt.figure(figsize=(15,15))
+# print(plt.figure(figsize=(100,100)))
+nx.draw(stations_graph_connection,station_location,with_labels = True,node_size = 20)
+plt.show()
+
+
+def stations_less_first(pathes):
+    return sorted(pathes,key=len)
+
+def shortest_path_first(pathes):
+    if len(pathes) <= 1: return pathes
+
+    def get_path_distance(path):
+        distance = 0
+        for station in path [:-1]:
+            distance += get_station_distance(station,path[-1])
+
+            return distance
+
+    return sorted(pathes,key = get_path_distance)
+
+def search(start,destination,connection_graph = stations_connection,sort_candidate = stations_less_first):
+    pathes = [[start]]
+    visited = set()
+
+    while pathes:
+        path = pathes.pop(0)
+        froninter = path[-1]
+
+        if froninter in visited :continue
+        successor = connection_graph[froninter]
+
+
+        for station in successor:
+            if station in visited:continue
+
+            new_path = path+[station]
+
+            pathes.append(new_path)
+
+            if station == destination:return new_path
+        visited.add(froninter)
+        pathes = sort_candidate(pathes)
+
+print(search('公主坟','双合'))
+def pretty_print(path):
+    print('---->'.join(path))
+
+pretty_print(search('公主坟','化工'))
+
+print(search('公主坟','双井',sort_candidate=shortest_path_first))
+
+
+
